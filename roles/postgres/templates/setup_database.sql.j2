@@ -1,0 +1,15 @@
+-- Create {{ database.name }} database
+CREATE DATABASE {{ database.name }}
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = '{{ database.locale }}'
+       LC_CTYPE = '{{ database.locale }}'
+       CONNECTION LIMIT = -1;
+
+-- Create {{ database.user }} user
+CREATE USER {{ database.user }} WITH PASSWORD '{{ database.password }}';
+
+-- Grant permissions for user to create database objects.
+GRANT ALL PRIVILEGES ON DATABASE {{ database.name }} TO {{ database.user }};
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO {{ database.user }};

@@ -1,0 +1,11 @@
+---
+
+- name: Reset - stop postgres service - runs only if reset=true has been passed in
+  service:
+    name: "postgresql-{{ postgres_version_nr }}"
+    state: stopped
+
+- name: Reset - delete postgres data directory - runs only if reset=true has been passed in
+  file:
+    dest: "/var/lib/pgsql/{{ postgres_version_nr }}/data"
+    state: absent

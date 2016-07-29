@@ -1,0 +1,25 @@
+filter{
+  if [type] in [ "cpas-service", "idam-bridge", "idp-consumer", "idp-producer", "initiator-service", "metadata-service", "migration-inbound-consumer", "migration-outbound-producer", "migration-service", "poa-web-service", "rota-admin-producer", "rota-producer" ] {
+    multiline {
+      pattern => "^%{TIMESTAMP_ISO8601} "
+      negate => "true"
+      what => "previous"
+    }
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:loglevel} (?<thread>\[(.)*?\]) %{JAVACLASS:logger} %{GREEDYDATA:message}" }
+      overwrite => [ "message" ]
+    }
+    date {
+      match => [ "timestamp", "YYYY-MM-dd HH:mm:ss" ]
+    }
+  }
+  else if [type] == "initiator-auditlog" {
+    grok {
+      match => { "message" => "AUDIT \- %{LOGLEVEL:loglevel} \- \[%{TIMESTAMP_ISO8601:timestamp}\] %{GREEDYDATA:message}" }
+      overwrite => [ "message" ]
+    }
+    date {
+      match => [ "timestamp", "YYYY-MM-dd HH:mm:ss" ]
+    }
+  }
+}

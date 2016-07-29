@@ -1,0 +1,57 @@
+# Setup postgres repo
+- name: Setup repo for postgres
+  yum_repository:
+    name: postgres
+    description: postgres repo
+    baseurl: https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-$releasever-$basearch
+    enabled: yes
+
+# Install a specific version of postgres
+- name: Install postgresql packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - "{{ postgres_yum_packages }}"
+  register: postgres_pkg
+
+# Initialize the database - must have to start postgres!
+- name: Initialize database
+  shell: "/usr/pgsql-{{ postgres_version_nr }}/bin/postgresql{{ postgres_version_yum }}-setup initdb"
+  when: postgres_pkg.changed
+
+# Start and set the service level
+- name: Setting service state
+  service:
+    name: "postgresql-{{ postgres_version_nr }}"
+    state: "{{ postgresql_service_state }}"
+    enabled: "{{ postgresql_service_enabled }}"
+
+# Allowing postgres to start up after a vm reboot
+- name: Updating runlevel
+  shell: "chkconfig --level 234 postgresql-{{ postgres_version_nr }} on"
+
+# Create new mount points for postgres
+- name: Setup new directory for postgres
+  file:
+    path: "{{ postgres_data_directory }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    recurse: yes
+  when: >
+    ( postgres_data_directory is defined ) and ( postgres_data_directory != postgres_default_directory )
+
+# Link the old directory to the newly created mount point
+- name: Link default postgres location to new directory
+  file:
+    path: "/var/lib/pgsql/{{ postgres_version_nr }}"
+    dest: "{{ postgres_data_directory }}"
+  when: >
+    ( postgres_data_directory is defined ) and ( postgres_data_directory != postgres_default_directory )
+
+# Move the existing data files from old location to new
+- name: Move postgres files from default location to new directory
+  command: "mv /var/lib/pgsql/{{ postgres_version_nr }} {{ postgres_data_directory }}/{{ postgres_version_nr }}"
+  when: >
+    ( postgres_data_directory is defined ) and ( postgres_data_directory != postgres_default_directory )

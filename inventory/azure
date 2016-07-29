@@ -1,0 +1,118 @@
+[azure:children]
+ci-pipeline
+monitoring-stack
+management-layer
+
+[ci-pipeline:children]
+jenkins-master
+jenkins-slaves
+artifactory-servers
+sonarqube-servers
+
+[monitoring-stack:children]
+elk-servers
+zabbix-servers
+
+[zabbix-servers:children]
+zabbix-db
+zabbix-app
+zabbix-proxy
+
+[elk-servers:children]
+elasticsearch-server
+logstash-server
+kibana-server
+logstash-proxy
+
+[artifactory-servers:children]
+artifactory-db
+artifactory-app
+
+[sonarqube-servers:children]
+sonarqube-db
+sonarqube-app
+
+[artifactory-db]
+ansible_ssh_host=10.128.2.10 ansible_user=devops
+
+[artifactory-app]
+ansible_ssh_host=10.128.2.11 ansible_user=devops
+
+[sonarqube-db]
+ansible_ssh_host=10.128.2.60 ansible_user=devops
+
+[sonarqube-app]
+ansible_ssh_host=10.128.2.61 ansible_user=devops
+
+[zabbix-db]
+ansible_ssh_host=10.128.1.60 ansible_user=opssvcs
+
+[zabbix-app]
+ansible_ssh_host=10.128.1.50 ansible_user=opssvcs
+
+[zabbix-proxy]
+
+[jenkins-master]
+ansible_ssh_host=10.128.2.70 ansible_user=devops
+ansible_ssh_host=10.128.2.71 ansible_user=devops
+
+[jenkins-slaves]
+ansible_ssh_host=10.128.2.80 ansible_user=devops
+ansible_ssh_host=10.128.2.81 ansible_user=devops
+ansible_ssh_host=10.128.2.82 ansible_user=devops
+ansible_ssh_host=10.128.2.83 ansible_user=devops
+ansible_ssh_host=10.128.2.84 ansible_user=devops
+ansible_ssh_host=10.128.2.85 ansible_user=devops
+
+[logstash-server]
+ansible_ssh_host=10.128.1.70 ansible_user=opssvcs
+
+[logstash-proxy]
+
+[elasticsearch-server]
+ansible_ssh_host=10.128.1.80 ansible_user=opssvcs
+
+[git-server]
+ansible_ssh_host=10.128.2.20 ansible_user=devops
+
+[ansible-server]
+ansible_ssh_host=10.128.2.30 ansible_user=devops
+ansible_ssh_host=10.128.2.31 ansible_user=devops
+
+[ansible-tower]
+ansible_ssh_host=10.128.2.40 ansible_user=devops
+
+[rattic-server]
+ansible_ssh_host=10.128.2.50 ansible_user=devops
+ansible_ssh_host=10.128.2.51 ansible_user=devops
+
+[clamav-server]
+ansible_ssh_host=10.128.1.10 ansible_user=opssvcs
+
+[pulp-server]
+ansible_ssh_host=10.128.1.20 ansible_user=opssvcs
+
+[app-dynamics]
+ansible_ssh_host=10.128.1.30 ansible_user=opssvcs
+
+[smtp-gateway]
+ansible_ssh_host=10.128.1.40 ansible_user=opssvcs
+
+[bacula-app]
+ansible_ssh_host=10.128.1.90 ansible_user=opssvcs
+
+[bacula-db]
+ansible_ssh_host=10.128.1.100 ansible_user=opssvcs
+ansible_ssh_host=10.128.1.101 ansible_user=opssvcs
+
+[openvpn-app]
+ansible_ssh_host=10.128.4.10 ansible_user=opssvcs
+
+[haproxy-app]
+ansible_ssh_host=10.128.5.10 ansible_user=opssvcs
+ansible_ssh_host=10.128.5.11 ansible_user=opssvcs
+ansible_ssh_host=10.128.5.5 ansible_user=opssvcs
+
+[reverse-proxy]
+ansible_ssh_host=10.128.5.20 ansible_user=opssvcs
+ansible_ssh_host=10.128.5.6 ansible_user=opssvcs

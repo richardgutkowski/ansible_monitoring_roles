@@ -1,0 +1,6 @@
+# Default var settings
+
+jre_version: 8u91
+jre_url_ver: "{{ jre_version }}-b14"
+jre_url: "http://download.oracle.com/otn-pub/java/jdk/{{ jre_url_ver }}/jdk-{{ jre_version }}-linux-x64.rpm"
+openjdk: 1

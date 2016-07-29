@@ -1,0 +1,31 @@
+---
+# defaults file for ansible-logstash
+clear_logstash_config: false  #defines if logstash_config_dir should be cleared out
+logstash_config_dir: /etc/logstash/conf.d
+logstash_base_configs:
+  - 000_system_inputs
+  - 101_messages
+  - 999_outputs
+logstash_system_file_inputs:
+  - path: /var/log/messages
+    type: messages
+#logstash_basic_patterns_configs:
+#  - postfix
+#logstash_service_configs:
+#  - 001_service_inputs
+#  - 201_tomcat
+#logstash_service_file_inputs:
+#  - path: /usr/share/tomcat6/logs/catalina.out
+#    type: tomcat
+#logstash_patterns_configs:
+#  - tomcat
+logstash_folder: /opt/logstash
+logstash_base_outputs:
+  - output: redis
+    output_host: '{{ logstash_server_ip }}'
+logstash_project: project_name
+logstash_log_dir: /var/log/logstash
+logstash_server_ip: loginfra.dev2.cloud.local  
+logstash_version: 1.5
+logstash_enabled: false
+local_domain: dev2.cloud.local

@@ -1,0 +1,21 @@
+filter {
+  if [type] in [ "opendj-access", "opendj-error", "opendj-replication" ] {
+    grok {
+      match => { "message" => "\[%{GREEDYDATA:timestamp}\] %{GREEDYDATA:message}" }
+      overwrite => [ "message" ]
+      remove_field => [ "haproxy_hour", "haproxy_milliseconds", "haproxy_minute", "haproxy_month", "haproxy_monthday", "haproxy_second", "haproxy_time", "haproxy_year" ]
+    }
+    date {
+      match => [ "timestamp", "dd/MMM/YYYY:HH:mm:ss Z" ]
+    }
+  }
+  else if [type] == "opendj-http-access" {
+    grok {
+      match => { "message" => "-	%{IPV4:ip_address}	%{WORD:username}	%{HAPROXYDATE:timestamp}	%{WORD:method}	%{URIPATHPARAM:endpoint}	%{NOTSPACE:protocol}	%{BASE10NUM:statuscode}	%{GREEDYDATA:otherinfo}" }
+      remove_field => [ "haproxy_hour", "haproxy_milliseconds", "haproxy_minute", "haproxy_month", "haproxy_monthday", "haproxy_second", "haproxy_time", "haproxy_year" ]
+    }
+    date {
+      match => [ "timestamp", "dd/MMM/YYYY:HH:mm:ss Z" ]
+    }
+  }
+}

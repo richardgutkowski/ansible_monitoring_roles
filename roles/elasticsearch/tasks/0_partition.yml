@@ -1,0 +1,34 @@
+---
+- name: Install parted program
+  yum: name=parted state=present
+
+- name: check if the sdb block device exists
+  stat: path=/dev/sdb
+  register: disk_chk
+
+- name: check if partition sdb1 exists
+  stat: path=/dev/sdb1
+  register: part_chk
+
+- name: Copy Parted script to /tmp
+  copy: src="parted.txt" dest=/tmp/parted.txt
+  when: disk_chk.stat.isblk == True and part_chk.stat.exists == False
+  
+- name: Partition the disk with parted
+  shell: /sbin/parted < /tmp/parted.txt
+  when: disk_chk.stat.isblk == True and part_chk.stat.exists == False
+
+- name: Create volume group vg_log
+  lvg: vg=vg_log pvs=/dev/sdb1
+
+- name: Setup the LV Logical Volume
+  lvol: vg=vg_log lv=lv_opt size=100%FREE
+
+- name: Format the Logical Volume
+  filesystem: fstype=ext4 dev=/dev/vg_log/lv_opt
+
+- name: Mount the logical volume
+  mount: name=/opt src=/dev/vg_log/lv_opt fstype=ext4 dump="1" passno="2" state=mounted
+
+- name: Delete the parted script from /tmp
+  file: dest=/tmp/parted.txt state=absent

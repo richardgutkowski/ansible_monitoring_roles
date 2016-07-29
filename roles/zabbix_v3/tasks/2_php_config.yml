@@ -1,0 +1,61 @@
+---
+
+- name: Create symlink from /usr/share/zabbix to /var/www/zabbix
+  file:
+    src: /usr/share/zabbix
+    dest: /var/www/zabbix
+    state: link
+    force: yes
+
+- name:  Zabbix sever conf file
+  template:
+    src: zabbix_server.conf.j2
+    dest: "{{ zabbix_web_conf_dir }}/zabbix_server.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart zabbix server
+  service:
+    name: zabbix-server
+    state: restarted
+    enabled: yes
+
+- name: Permissions for nginx and fpm-php
+  file:
+    path: "{{ zabbix_web_conf_dir }}/web"
+    owner: nginx
+    group: nginx
+  file:
+    path: "{{ zabbix_web_conf_dir }}/web/zabbix.conf.php"
+    mode: 0640
+  file:
+    path: "{{ zabbix_web_conf_dir }}/web/maintenance.inc.php"
+    mode: 0640
+
+- name: Remove zabbix setup.php
+  file:
+    path: /usr/share/zabbix/setup.php
+    state: absent
+
+- name: Remove nginx default
+  file:
+    path: /etc/nginx/conf.d/default.conf
+    state: absent
+
+- name: Update php.ini config for Zabbix frontend
+  lineinfile:
+    regexp: "{{ item.name }}"
+    line: "{{ item.line }}"
+    dest: /etc/php.ini
+  sudo: yes
+  with_items:
+    - {'name': ";date.timezone", 'line': "date.timezone=Europe/London"}
+    - {'name': "post_max_size", 'line': "post_max_size=128M"}
+    - {'name': "max_input_time", 'line': "max_input_time=300"}
+    - {'name': "max_execution_time", 'line': "max_execution_time=300"}
+    - {'name': "upload_max_filesize", 'line': "upload_max_filesize=128M"}
+  notify:
+    - restart php-fpm
+    - restart zabbix-server
+  ignore_errors: "{{ ansible_check_mode }}"

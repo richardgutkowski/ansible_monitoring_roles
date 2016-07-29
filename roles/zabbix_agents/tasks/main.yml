@@ -1,0 +1,3 @@
+---
+- include: 0_misc.yml
+- include: 1_zabbix-agent.yml

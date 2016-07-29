@@ -1,0 +1,10 @@
+---
+# tasks file for ansible-logstash
+- include: install_pkg.yml
+  when: logstash_enabled
+
+- include: config_logstash.yml
+  when: logstash_enabled
+
+- include: validate_permissions.yml
+  when: logstash_enabled

@@ -1,0 +1,4 @@
+---
+
+zabbix_port: 10050
+zabbix_master_ip: "{{ hostvars[groups['zabbix-app'][0]]['ansible_ssh_host'] }}"

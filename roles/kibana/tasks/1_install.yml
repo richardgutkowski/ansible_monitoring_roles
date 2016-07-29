@@ -1,0 +1,12 @@
+---
+- name: install kibana and deps
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    -  kibana
+
+- name: Ensure kibana app is started on boot
+  service:
+    name: kibana
+    enabled: yes

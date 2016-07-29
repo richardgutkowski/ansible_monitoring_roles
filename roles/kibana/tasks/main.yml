@@ -1,0 +1,9 @@
+---
+#partition /dev/sdb and mount as /opt if not comment 0_partition.yml
+- debug: msg="please create a dns/vhost entry for logsearch.{{local_subdomain}}.cloud.local and point to reverse proxy for that DC"
+- debug: msg="you need these rpms elasticsearch-1.5.2.noarch.rpm kibana-4.ls.2-1.el6.x86_64.rpm in moj yum repo"
+- debug: msg="All tasks are idempotent so it wont repartition if it already exists"
+#- pause: seconds=10
+
+- include: 1_install.yml
+- include: 2_configure.yml

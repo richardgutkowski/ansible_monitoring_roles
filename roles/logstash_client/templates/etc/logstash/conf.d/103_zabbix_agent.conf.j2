@@ -1,0 +1,16 @@
+filter{
+  if [type] == "zabbix-agent" {
+    grok {
+      match => ["message", "%{INT:pid}:%{BASE16NUM:zabbix_agent_date}:%{BASE16FLOAT:zabbix_agent_time} %{GREEDYDATA:zabbix_message}" ]
+    }
+    mutate {
+      add_field => {
+        "timestamp" => "%{zabbix_agent_date} %{zabbix_agent_time}"
+      }
+    }
+    date { match => [ "timestamp", "yyyyMMdd HHmmss.SSS", "UNIX" ] }
+    mutate {
+      remove_field => [ "zabbix_agent_date", "zabbix_agent_time" ]
+    }
+  }
+}

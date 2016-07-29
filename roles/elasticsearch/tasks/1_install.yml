@@ -1,0 +1,10 @@
+---
+- name: Install elasticsearch
+  yum:
+    name: elasticsearch
+    state: installed
+
+- name: Ensure elasticsearch is started on boot
+  service:
+    name: elasticsearch
+    enabled: yes

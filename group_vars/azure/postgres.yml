@@ -1,0 +1,35 @@
+---
+
+postgres_reset: false
+
+postgres_version_nr: 9.5
+postgres_version_yum: 95
+postgres_yum_packages:
+  - "postgresql{{ postgres_version_yum }}"
+  - "postgresql{{ postgres_version_yum }}-server"
+  - "postgresql{{ postgres_version_yum }}-contrib"
+  - "postgresql{{ postgres_version_yum }}-devel"
+  - "postgresql{{ postgres_version_yum }}-libs"
+  - "python-psycopg2"
+
+postgresql_service_state: started
+postgresql_service_enabled: yes
+
+postgres_project_users:
+  - { name: 'zabbix', password: 'zabbix' }
+
+postgres_project_database:
+  - { name: 'zabbix', locale: 'en_US.UTF-8', encoding: 'UTF-8', owner: 'zabbix' }
+
+postgres_default_directory: "/var/lib/pgsql/{{ postgres_version_nr }}"
+postgres_data_directory: "{{ postgres_default_directory }}"
+
+run_postgres_zabbix: true
+
+database:
+  host: "{{ hostvars[groups['zabbix-db'][0]]['ansible_ssh_host'] }}"
+  port: 5432
+  name: zabbix
+  locale: en_GB.UTF-8
+  user:  zabbix
+  password: zabbix

@@ -1,0 +1,7 @@
+---
+
+zabbix_port: 10050
+zabbix_user: zabbix
+zabbix_group: zabbix
+zabbix_agent_log_dir: /var/log/zabbix-agent
+zabbix_master_ip: 127.0.0.1

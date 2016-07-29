@@ -1,0 +1,47 @@
+---
+
+- name: Delete default configuration file for nginx
+  file:
+    path: /etc/nginx.conf.d/default.conf
+    state: absent
+
+- name: Create PHP-FPM pool
+  template:
+    src: zabbix-pool.conf
+    dest: "{{ php_fpm_conf_dir }}/zabbix-pool.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart php-fpm
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Place the zabbix server file
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create configuration file
+  template:
+    src: zabbix.conf.php.j2
+    dest: "{{ zabbix_web_conf_dir }}/web/zabbix.conf.php"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart php-fpm
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create nginx configuration file
+  template:
+    src: zabbix-web.conf.j2
+    dest: /etc/nginx/conf.d/zabbix-web.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+  ignore_errors: "{{ ansible_check_mode }}"

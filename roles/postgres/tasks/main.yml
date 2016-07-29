@@ -1,0 +1,19 @@
+---
+
+- include: 2_reset.yml
+  tags: reset
+  when: ( postgres_reset is defined ) and ( postgres_reset | bool )
+
+- include: 0_misc.yml
+  tags: install
+
+- include: 1_config.yml
+  tags: configure
+
+- include: 3_script.yml
+  tags: script
+  when: ( run_postgres_creation_script is defined ) and ( run_postgres_creation_script | bool )
+
+- include: 4_zabbix.yml
+  tags: zabbix
+  when: ( run_postgres_zabbix is defined ) and ( run_postgres_zabbix | bool )

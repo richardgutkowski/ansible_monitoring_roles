@@ -1,0 +1,43 @@
+---
+- name: config_logstash | clearing existing logstash config
+  file: path={{ logstash_config_dir }} state=absent
+  when: clear_logstash_config
+
+- name: config_logstash | recreating logstash config directory if previously cleared
+  file: path={{ logstash_config_dir }} state=directory owner=root group=root mode=0775
+  when: clear_logstash_config
+
+- name: config_logstash | removing original logstash config if it exists
+  file: path={{ logstash_config_dir }}/logstash.conf state=absent
+  notify: restart logstash
+
+- name: config_logstash | configuring logstash config file
+  template: src=logstash_config.j2 dest=/etc/sysconfig/logstash owner=root group=root mode=0644
+  notify: restart logstash
+
+- name: config_logstash | creating logstash pattern folders
+  file: path=/etc/logstash/conf.d/grok-patterns state=directory owner=logstash group=logstash mode=0775 recurse=yes
+
+- name: config_logstash | copy basic patterns to logstash pattern folder
+  copy: src={{ item }} dest=/etc/logstash/conf.d/grok-patterns/ mode=0775 owner=logstash group=logstash
+  notify: restart logstash
+  with_items: logstash_basic_patterns_configs
+  when: logstash_basic_patterns_configs is defined
+
+- name: config_logstash | copy service specific patterns to logstash pattern folder
+  copy: src={{ item }} dest=/etc/logstash/conf.d/grok-patterns/ mode=0775 owner=logstash group=logstash
+  notify: restart logstash
+  with_items: logstash_patterns_configs
+  when: logstash_patterns_configs is defined
+
+- name: config_logstash | configuring logstash - base configs
+  template: src=etc/logstash/conf.d/{{ item }}.conf.j2 dest={{ logstash_config_dir }}/{{ item }}.conf owner=logstash group=logstash mode=0644
+  notify: restart logstash
+  with_items: logstash_base_configs
+
+- name: config_logstash | configuring logstash - service configs
+  template: src=etc/logstash/conf.d/{{ item }}.conf.j2 dest={{ logstash_config_dir }}/{{ item }}.conf owner=logstash group=logstash mode=0644
+  notify: restart logstash
+  with_items: logstash_service_configs
+  when: logstash_service_configs is defined
+

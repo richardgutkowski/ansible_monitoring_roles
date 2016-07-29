@@ -1,0 +1,32 @@
+---
+### LOGSTASH SERVICE CONFIGS ###
+#Enable if you have service specific logs and add it under the right groups file¬
+logstash_service_configs:
+  - 001_service_inputs
+#  - 201_tomcat
+#  - 206_nginx
+#logstash_service_file_inputs:
+#  - path: /usr/share/tomcat6/logs/catalina.out
+#    type: tomcat
+#  - path: /var/log/nginx/access.log
+#    type: nginx_access
+logstash_service_inputs:
+  - prot: log4j
+    host: localhost
+    mode: server
+    type: log4j
+    port: 6319
+    tags: yes
+#  - prot: log4j2
+#    host: localhost
+#    mode: server
+#    type: log4j2
+#    port: 6329
+#    tags: yes
+#logstash_log4j2_gem: logstash-input-log4j2-5.1-java.gem
+#logstash_log4j2_gem_url: http://centralrepo.{{ local_domain }}/hass_bin/logstash/{{ logstash_log4j2_gem }}
+#logstash_log4j2_gem_sha256sum: d9580d5b7be3e12b8871894f14ae3a27de5e17732cf925ec70ab084a8cd627ab
+#logstash_patterns_configs:
+#  - tomcat
+#  - nginx
+

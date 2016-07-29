@@ -1,0 +1,11 @@
+---
+#partition /dev/sdb and mount as /opt if not comment 0_partition.yml
+- debug: msg="please add another disk /dev/sdb (200G recommended) if you want to partition and mount /opt"
+- debug: msg="you also need to update the local_subdomain variable under vars/main.yml for the DC"
+- debug: msg="All tasks are idempotent so it wont repartition if it already exists"
+- pause: seconds=10
+
+- include: 0_partition.yml
+  when: ( golden_image_used|bool )
+- include: 1_install.yml
+- include: 2_configure.yml

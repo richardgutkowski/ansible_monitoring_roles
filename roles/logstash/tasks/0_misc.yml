@@ -1,0 +1,11 @@
+---
+- name: Install logstash and deps
+  yum:
+    name: logstash
+    state: installed
+
+- name: Ensure logstash is started on boot
+  service:
+    name: logstash
+    enabled: yes
+    state: started

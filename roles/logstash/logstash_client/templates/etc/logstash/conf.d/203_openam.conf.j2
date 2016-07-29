@@ -1,0 +1,16 @@
+filter{
+  if [type] in [ "openam-auth-access", "openam-auth-error", "openam-console-access", "openam-console-error", "openam-policy-access", "openam-policydelegation-access", "openam-policy-error", "openam-rest-access", "openam-rest-authz", "openam-sso-access", "opena-cot-access", "openam-cot-error", "openam-entitlement-access", "openam-idff-access", "openam-idff-error", "openam-saml2-access", "openam-saml2-error", "openam-wsfederation-access", "openam-wsfederation-error" ] {
+    multiline {
+      pattern => "(?>\d\d){1,2}"
+      negate => "true"
+      what => "previous"
+    }
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:timestamp}%{GREEDYDATA:message}" }
+      overwrite => [ "message" ]
+    }
+    date {
+      match => [ "timestamp", "YYYY-MM-dd HH:mm:ss" ]
+    }
+  }
+}

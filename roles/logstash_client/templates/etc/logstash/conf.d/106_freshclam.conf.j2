@@ -1,0 +1,19 @@
+filter{
+  if [type] == "freshclam" {
+    multiline {
+      pattern => "^(?:[A-Za-z_.]+)"
+      what => "next"
+    }
+#    grok {
+#      match => {"message", "ClamAV update process started at %{DAY:day} %{MONTH:month} %{MONTHDAY:monthday} %{TIME:time} %{YEAR:year}"}
+#    }
+#    mutate {
+#      add_field => {
+#        "timestamp" => "%{day} %{month} %{monthday} %{time} %{year}"
+#      }
+#    }
+#    mutate {
+#      remove_field => [ "day", "time" ,"month","monthday","year"]
+#    }    
+  }
+}

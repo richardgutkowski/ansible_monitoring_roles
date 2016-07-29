@@ -1,0 +1,7 @@
+select /dev/sdb
+p
+mklabel gpt
+mkpart primary 0 100%
+set 1 lvm on
+p
+q

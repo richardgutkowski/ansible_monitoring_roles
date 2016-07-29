@@ -1,0 +1,6 @@
+---
+# tasks file for zabbix_v3_lts
+
+- include: 0_misc.yml
+- include: 1_nginx_config.yml
+- include: 2_php_config.yml

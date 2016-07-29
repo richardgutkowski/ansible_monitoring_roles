@@ -1,0 +1,27 @@
+filter {
+
+ if [type] == "maillog" {
+    grok {
+        patterns_dir => [ "/etc/logstash/conf.d/grok-patterns" ]
+        match => { "message" => [
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPDCONNECTS}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPDACTIONS}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPDTIMEOUTS}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPDLOGIN}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPDCLIENT}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPRELAY}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPCONNECT}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTP4XX}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTP5XX}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPREFUSAL}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPLOSTCONNECTION}",
+            "%{SYSLOGBASE:time} %{POSTFIXSMTPTIMEOUT}",
+            "%{SYSLOGBASE:time} %{POSTFIXBOUNCE}",
+            "%{SYSLOGBASE:time} %{POSTFIXQMGR}",
+            "%{SYSLOGBASE:time} %{POSTFIXCLEANUP}"
+          ] 
+       }
+    }
+    date { match => [ "time", "MMM dd HH:mm:ss", "MMM  d HH:mm:ss" ] }
+ }
+}

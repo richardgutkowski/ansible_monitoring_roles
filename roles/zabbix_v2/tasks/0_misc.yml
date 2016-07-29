@@ -1,0 +1,60 @@
+---
+
+# Only works with the latest version of Ansible (2.0)
+- name: Setup Zabbix repo
+  yum_repository:
+    name: Zabbix
+    description: Zabbix repository
+    baseurl: "{{ zabbix_repo_url }}"
+    enabled: "{{ zabbix_repo_enable }}"
+    gpgcheck: "{{ zabbix_repo_gpgcheck }}"
+    gpgkey: "{{zabbix_repo_gpg_url }}"
+
+- name: Install Zabbix packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - "{{ zabbix_yum_packages }}"
+
+- name: Install PHP packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - "{{ zabbix_php_packages }}"
+
+- name: Disable default pool
+  command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
+  notify: restart php-fpm
+
+- name: Turn off Apache
+  service: name=httpd state=stopped enabled=no
+
+- name: Create home directory
+  file:
+    state: directory
+    path: "{{ zabbix_web_home_dir }}"
+    owner: "{{ zabbix_web_user }}"
+    group: "{{ zabbix_web_group }}"
+    mode: 0755
+
+- name: Create log directory
+  file:
+    state: directory
+    path: "{{ zabbix_web_log_dir }}"
+    owner: "{{ zabbix_web_user }}"
+    group: "{{ zabbix_web_group }}"
+    mode: 0755
+
+- name: Enable nginx
+  service:
+    name: nginx
+    enabled: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Enable php-fpm
+  service:
+    name: php-fpm
+    enabled: yes
+  ignore_errors: "{{ ansible_check_mode }}"

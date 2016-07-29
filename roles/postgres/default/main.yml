@@ -1,0 +1,26 @@
+---
+
+postgres_version_yum: 95
+postgres_version_nr: 9.5
+
+postgres_yum_packages:
+  - "postgresql{{ postgres_version_yum }}"
+  - "postgresql{{ postgres_version_yum }}-server"
+  - "postgresql{{ postgres_version_yum }}-contrib"
+  - "postgresql{{ postgres_version_yum }}-devel"
+  - "postgresql{{ postgres_version_yum }}-libs"
+  - "python-psycopg2"
+
+postgresql_service_state: started
+postgresql_service_enabled: yes
+
+postgres_project_users:
+  - { name: 'zabbix', password: 'zabbix' }
+
+postgres_project_database:
+  - { name: 'zabbix', locale: 'en_US.UTF-8', encoding: 'UTF-8', owner: 'zabbix' }
+
+run_postgres_zabbix: true
+
+postgres_default_directory: "/var/lib/pgsql/{{ postgres_version_nr }}"
+postgres_data_directory: "/opt/data/postgres/{{ postgres_version_nr }}"

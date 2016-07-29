@@ -1,0 +1,12 @@
+filter{
+  if [type] == "clamscan" {
+    multiline {
+      pattern => "^(?:[A-Za-z_.]+)"
+      what => "previous"
+    }
+    grok {
+      patterns_dir   => "/etc/logstash/conf.d/grok-patterns/"
+      match => { "message" => "%{CLAMSCAN}" }
+    }
+  }
+}

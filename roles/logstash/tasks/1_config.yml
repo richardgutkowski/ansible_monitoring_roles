@@ -1,0 +1,56 @@
+---
+
+- name: Generate the logstash config file
+  template:
+    src: logstash.conf.j2
+    dest: /etc/logstash/conf.d/logstash.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart logstash
+
+- name: Updated java parameters for logstash
+  lineinfile:
+    dest: /etc/sysconfig/logstash
+    regexp: '^LS_HEAP_SIZE='
+    insertafter: '^#LS_HEAP_SIZE='
+    line: 'LS_HEAP_SIZE="4096m"'
+  notify:
+    - restart logstash
+
+- name: Adjust init.d JAVA_OPTS
+  lineinfile:
+    dest: /etc/init.d/logstash
+    regexp: "^LS_JAVA_OPTS="
+    line: "LS_JAVA_OPTS=-Djava.io.tmpdir=${LS_HOME} -Xms256M "
+    state: present
+    backup: yes
+  notify:
+   - restart logstash
+
+- name: Generate certkey for logstash certificate
+  command: /usr/bin/openssl genrsa -out /etc/logstash/logstash-server.key 2048 creates=/etc/logstash/logstash-server.key
+  when: ( logstash_cert_required|bool )
+
+- name: Generate csr for logstash
+  command: /usr/bin/openssl req -new -key /etc/logstash/logstash-server.key -out /etc/logstash/logstash-server.csr -subj "/C=GB/ST=London/L=London/O=Ministry of Justice/OU=CJSCP - Criminal Justice Programme/CN=loginfra.{{local_subdomain}}.cloud.local/emailAddress=CJSCPHASS@hmcts.gsi.gov.uk" creates=/etc/logstash/logstash-server.csr
+  when: ( logstash_cert_required|bool )
+
+- name: Generate logstash certificate from csr
+  command:  /usr/bin/openssl x509 -req -days 3650 -in /etc/logstash/logstash-server.csr -signkey /etc/logstash/logstash-server.key -out /etc/logstash/logstash-server.crt creates=/etc/logstash/logstash-server.crt
+  when: ( logstash_cert_required|bool )
+
+- name: Allow logstash to readfiles from /var/log
+  acl:
+    name: /var/log
+    entity: logstash
+    etype: user
+    permissions: rx
+    default: yes
+    state: present
+
+- name: Start logstash
+  service:
+    name: logstash
+    state: started

@@ -1,0 +1,20 @@
+<?php
+// {{ ansible_managed }}
+global $DB;
+
+// Valid types are MYSQL, SQLITE3 or POSTGRESQL
+$DB["TYPE"]                     = 'POSTGRESQL';
+$DB["SERVER"]                   = '{{ database.host }}';
+$DB["PORT"]                     = '{{ database.port }}';
+
+// SQLITE3 use full path to file/database: $DB["DATABASE"] = '/var/lib/zabbix/zabbix.sqlite3';
+$DB["DATABASE"]                 = '{{ database.name }}';
+$DB["USER"]                     = '{{ database.user }}';
+$DB["PASSWORD"]                 = '{{ database.password }}';
+
+$ZBX_SERVER                     = '{{ zabbix_server_host }}';
+$ZBX_SERVER_PORT                = '{{ zabbix_server_port }}';
+$ZBX_SERVER_NAME                = '{{ zabbix_web_fqdn }}';
+
+$IMAGE_FORMAT_DEFAULT   = IMAGE_FORMAT_PNG;
+?>

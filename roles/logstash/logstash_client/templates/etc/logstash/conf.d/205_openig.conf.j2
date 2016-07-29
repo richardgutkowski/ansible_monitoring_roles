@@ -1,0 +1,16 @@
+filter{
+  if [type] in [ "openig-amSecurity", "openig-libCOT",  "openig-libIDFF", "openig-libPlugins", "openig-libSAML" , "openig-libSAML2"] {
+    multiline {
+      pattern => "^(\b\w+\b):"
+      negate => "true"
+      what => "previous"
+    }
+    grok {
+      match => { "message" => "%{WORD:logName}:%{DATESTAMP:timestamp} (AM|PM) %{WORD}: Thread\[(?<thread>(.)*?)\]\n%{GREEDYDATA:message}" }
+      overwrite => [ "message" ]
+    }
+    date {
+      match => [ "timestamp", "MM/dd/YYYY HH:mm:ss:SSS a z" ]
+    }
+  }
+}

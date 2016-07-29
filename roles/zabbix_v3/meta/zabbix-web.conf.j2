@@ -1,0 +1,21 @@
+server {
+    client_max_body_size 200M;
+    listen       80 default_server;
+    server_name  _;
+
+    root        /var/www/zabbix;
+    index       index.html index.php;
+    access_log  /var/log/nginx/access_zabbix.log main;
+    error_log   /var/log/nginx/error_zabbix.log error;
+
+    location ~ \.php {
+      include fastcgi_params;
+      try_files $uri =404;
+      fastcgi_split_path_info ^(.+\.php)(/.+)$;
+      #fastcgi_intercept_errors on;
+      fastcgi_pass    unix:/var/run/php-zabbix.socket;
+      fastcgi_index   index.php;
+      fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include fastcgi_params;
+    }
+}

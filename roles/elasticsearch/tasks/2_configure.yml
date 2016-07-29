@@ -1,0 +1,67 @@
+---
+- name: Create logstash dirs under /opt
+  file:
+    path: "/opt/{{ item.path }}"
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0750
+  with_items:
+    - { path: 'elasticsearch' }
+    - { path: 'elasticsearch/data' }
+    - { path: 'elasticsearch/logs' }
+
+- name: Check if folder elasticsearch exists
+  stat:
+    path: /var/log/elasticsearch
+  register: fol_chk
+
+- name: Remove /var/log/elasticsearch directory
+  file:
+    path: /var/log/elasticsearch
+    state: absent
+  when: fol_chk.stat.exists and fol_chk.stat.isdir
+
+- name: Create /var/log/elasticsearch to /opt/elasticsearch/logs
+  file:
+    src: /opt/elasticsearch/logs
+    dest: /var/log/elasticsearch
+    owner: elasticsearch
+    group: elasticsearch
+    state: link
+
+- name: Update sysconfig log_dir for elasticsearch
+  lineinfile:
+    dest: /etc/sysconfig/elasticsearch
+    regexp: '^LOG_DIR='
+    insertafter: '^# Elasticsearch log'
+    line: 'LOG_DIR=/opt/elasticsearch/logs'
+
+- name: Update sysconfig data_dir for elasticsearch
+  lineinfile:
+    dest: /etc/sysconfig/elasticsearch
+    regexp: '^DATA_DIR='
+    insertafter: '^# Elasticsearch data'
+    line: 'DATA_DIR=/opt/elasticsearch/data'
+
+- name: Update sysconfig heap size for elasticsearch
+  lineinfile:
+    dest: /etc/sysconfig/elasticsearch
+    regexp: '^ES_HEAP_SIZE='
+    insertafter: '^#ES_HEAP_SIZE='
+    line: 'ES_HEAP_SIZE=4g'
+
+- name: Backup original elastic search config file
+  command: cp -v /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.backup creates=/etc/elasticsearch/elasticsearch.yml.backup
+
+- name: Update clustername to elk_{{local_subdomain}}_cluster
+  lineinfile: "dest=/etc/elasticsearch/elasticsearch.yml regexp='^cluster.name' insertafter='^#cluster.name' line='cluster.name: elk_{{local_subdomain}}_cluster'"
+  notify: restart elasticsearch
+
+- name: update network host for elasticsearch
+  lineinfile: "dest=/etc/elasticsearch/elasticsearch.yml regexp='^network.host' insertafter='^#network.host' line='network.host: {{ansible_eth0.ipv4.address}}'"
+
+- name: Start elasticsearch
+  service:
+    name: elasticsearch
+    state: started

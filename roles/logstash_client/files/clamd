@@ -1,0 +1,2 @@
+CLAMD_DATESTAMP %{DAY:day} %{MONTH:month} %{MONTHDAY:monthday} %{TIME:time} %{YEAR:year}
+CLAMD_INT %{NUMBER:clamd_int}
