@@ -1,4 +1,14 @@
 ---
+
+- name: Setup elasticsearch repo
+  yum_repository:
+    name: elasticsearch
+    description: Elasticsearch repository
+    baseurl: "{{ elastic_yum_url }}"
+    gpgcheck: "{{ elasic_yum_check }}"
+    gpgkey: "{{ elastic_yum_gpg }}"
+    enabled: yes
+
 - name: Install elasticsearch
   yum:
     name: elasticsearch

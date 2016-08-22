@@ -11,4 +11,15 @@
     - data.sql
     - images.sql
     - schema.sql
-  
+  when: ( zabbix_master|bool )
+
+- name: Copy files to Postgres location
+  copy:
+    src: "create/{{ item }}"
+    dest: "{{ postgres_data_directory }}/{{ item }}"
+    owner: postgres
+    group: postgres
+    mode: 0644
+  with_items:
+    - schema.sql
+  when: ( zabbix_proxy|bool )

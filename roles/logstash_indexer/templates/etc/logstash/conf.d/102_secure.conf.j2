@@ -1,0 +1,16 @@
+filter {
+  if [type] == "secure" {
+    grok {
+      match => { "message" => "%{SYSLOGTIMESTAMP:time} %{SYSLOGHOST:hostname} %{DATA:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:message_message}" }
+    }
+    grok {
+      match => { "message" => "Accepted %{WORD:secure_auth_method} for %{USER:secure_username} from %{IP:secure_src_ip} port %{INT:secure_src_port} ssh2" }
+      add_tag => [ "secure_user_login" ]
+    }
+    grok {
+      match => { "message" => "Invalid user %{USER:secure_username} from %{IP:secure_src_ip}" }
+      add_tag => [ "secure_user_login" ]
+    }
+    date { match => [ "time", "MMM dd HH:mm:ss", "MMM  d HH:mm:ss" ] }
+  }
+}

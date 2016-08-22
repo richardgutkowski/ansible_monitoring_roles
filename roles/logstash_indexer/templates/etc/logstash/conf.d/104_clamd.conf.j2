@@ -1,0 +1,16 @@
+filter{
+  if [type] == "clamd" {
+    grok {        
+      match => { "message" => "%{DAY:day} %{MONTH:month} %{MONTHDAY:monthday} %{TIME:time} %{YEAR:year} \-\> %{GREEDYDATA:clamd_message}" }
+    }
+    mutate {
+      add_field => { 
+        "timestamp" => "%{month} %{monthday} %{time}"
+      }
+    }
+    mutate {
+      remove_field => [ "day", "time" ,"month","monthday","year"]
+    }
+    date { match => [ "timestamp", "MMM dd HH:mm:ss", "MMM  d HH:mm:ss" ] }    
+  }
+}

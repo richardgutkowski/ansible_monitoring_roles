@@ -1,0 +1,37 @@
+---
+- name: Ensure ACLs are enabled on log fs by default
+  shell: "tune2fs -o acl {{ item }}"
+  become: yes
+  become_method: sudo
+  with_items:
+    - /dev/mapper/VolGroup-lv_varlog
+    - /dev/mapper/VolGroup-lv_varlogaudit
+  when: ( golden_image_used|bool )
+
+- name: Fix permissions on mount point
+  command: "/bin/mount -o remount,acl {{item}}"
+  become: yes
+  become_method: sudo
+  with_items:
+    - /dev/mapper/VolGroup-lv_varlog
+    - /dev/mapper/VolGroup-lv_varlogaudit
+  when: ( golden_image_used|bool )
+
+- name: Validating permissions on logstash folder
+  file:
+    path: "{{ logstash_folder }}"
+    state: directory
+    recurse: yes
+    owner: logstash
+    group: logstash
+  notify: restart logstash
+
+- name: Check permissions on /var/log
+  shell: getfacl -p /var/log/ | grep logstash
+  register: getfacl_result
+  changed_when: false
+  ignore_errors: true
+
+- name: Add permission to logstash user on /var/log folder
+  shell: setfacl -R -m u:logstash:r-x /var/log/
+  when: getfacl_result|failed

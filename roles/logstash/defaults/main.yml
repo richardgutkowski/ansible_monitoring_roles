@@ -1,0 +1,21 @@
+---
+
+# Yum settings
+logstash_yum_url: "http://packages.elasticsearch.org/logstash/2.2/centos"
+logstash_yum_gpg: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+logstash_gpg_check: yes
+
+# Server specific
+logstash_server_ip: 127.0.0.1
+logstash_domain_name: elk.server.local
+
+# Elasticsearch settings
+elasticsearch_server_ip: 127.0.0.1
+elasticsearch_server_port: 9200
+
+# Certificate settings
+logstash_cert_required: no
+logstash_ip_cert_required: yes
+
+# Cluster settings
+local_subdomain: azure

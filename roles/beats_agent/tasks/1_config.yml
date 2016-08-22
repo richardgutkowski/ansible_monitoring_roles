@@ -1,0 +1,43 @@
+---
+
+- name: Add pub Certificate
+  template:
+    src: logstash-forwarder.crt.j2
+    dest: "{{ logstash_cert_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: ( upload_logstash_certificate|bool )
+
+- name: Update filebeats config
+  template:
+    src: filebeat.yml.j2
+    dest: "{{ filebeat_config_dir }}/filebeat.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart filebeat
+  when: ( filebeat_config_dir is defined )
+
+- name: Update topbeat config
+  template:
+    src: topbeat.yml.j2
+    dest: "{{ topbeat_config_dir }}/topbeat.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart topbeat
+  when: ( topbeat_config_dir is defined )
+
+- name: Update packetbeat config
+  template:
+    src: packetbeat.yml.j2
+    dest: "{{ packetbeat_config_dir }}/packetbeat.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart packetbeat
+  when: ( packetbeat_config_dir is defined )

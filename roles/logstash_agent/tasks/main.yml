@@ -1,0 +1,10 @@
+---
+# tasks file for logstash-agent
+- include: 0_install.yml
+  when: logstash_enabled
+
+- include: 1_config.yml
+  when: logstash_enabled
+
+- include: 2_validate.yml
+  when: logstash_enabled

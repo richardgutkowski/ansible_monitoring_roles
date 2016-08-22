@@ -1,0 +1,1 @@
+CLAMSCAN Known viruses: %{NUMBER:knownvir}\nEngine version: %{GREEDYDATA:engver}\nScanned directories: %{NUMBER:scanneddir}\nScanned files: %{NUMBER:scannedfiles}\nInfected files: %{NUMBER:infectedfiles}\nTotal errors: %{NUMBER:totalerr}\nData scanned: %{GREEDYDATA:datascanned}\nData read: %{GREEDYDATA:dataread}\nTime: %{GREEDYDATA:time}

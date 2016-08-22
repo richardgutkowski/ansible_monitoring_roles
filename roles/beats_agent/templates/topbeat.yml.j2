@@ -1,0 +1,56 @@
+################### Topbeat Configuration Example #########################
+
+############################# Input ############################################
+input:
+  # In seconds, defines how often to read server statistics
+  period: 10
+
+  # Regular expression to match the processes that are monitored
+  # By default, all the processes are monitored
+  procs: [".*"]
+
+  # Statistics to collect (all enabled by default)
+  stats:
+    # per system statistics, by default is true
+    system: true
+
+    # per process statistics, by default is true
+    process: true
+
+    # file system information, by default is true
+    filesystem: true
+
+    # cpu usage per core, by default is false
+    cpu_per_core: false
+
+############################# Output ##########################################
+output:
+
+### Logstash as output
+  logstash:
+    hosts: ["{{ logstash_server_ip }}:{{ logstash_server_port }}"]
+    #bulk_max_size: {{ top_beat_bulk_max_size }}
+
+    # Optional TLS. By default is off.
+    tls:
+      certificate_authorities: ["{{ logstash_cert_path }}"]
+
+############################# Shipper #########################################
+shipper:
+
+############################# Logging #########################################
+
+# There are three options for the log ouput: syslog, file, stderr.
+logging:
+  level: warning
+  # enable file rotation with default configuration
+  to_files: true
+  # do not log to syslog
+  to_syslog: false
+
+  files:
+    path: {{ top_beat_log_path }}
+    name: {{ top_beat_log_name }}
+    keepfiles: {{ top_beat_keep_file }}
+    #files:
+    rotateeverybytes: 1048576000 # = 1000MB

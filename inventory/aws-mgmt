@@ -1,0 +1,117 @@
+[aws-mgmt:children]
+ci-pipeline
+monitoring-stack
+management-layer
+
+[ci-pipeline:children]
+jenkins-master
+jenkins-slaves
+artifactory-servers
+sonarqube-servers
+
+[monitoring-stack:children]
+elk-servers
+# zabbix-servers - uncomment if used
+# icinga-servers - uncomment if used
+
+[elk-servers:children]
+elasticsearch-server
+logstash-server
+kibana-server
+
+[zabbix-servers:children]
+zabbix-db
+zabbix-app
+
+[icinga-servers:children]
+icinga-db
+icinga-app
+
+[artifactory-servers:children]
+artifactory-db
+artifactory-app
+
+[sonarqube-servers:children]
+sonarqube-db
+sonarqube-app
+
+[artifactory-db]
+ansible_ssh_host= ansible_user=
+
+[artifactory-app]
+ansible_ssh_host= ansible_user=
+
+[sonarqube-db]
+ansible_ssh_host= ansible_user=
+
+[sonarqube-app]
+ansible_ssh_host= ansible_user=
+
+[zabbix-db]
+ansible_ssh_host= ansible_user=
+
+[zabbix-app]
+ansible_ssh_host= ansible_user=
+
+[jenkins-master]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[jenkins-slaves]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[logstash-server]
+ansible_ssh_host= ansible_user=
+
+[elasticsearch-server]
+ansible_ssh_host= ansible_user=
+
+[git-server]
+ansible_ssh_host= ansible_user=
+
+[ansible-server]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[ansible-tower]
+ansible_ssh_host= ansible_user=
+
+[rattic-server]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[clamav-server]
+ansible_ssh_host= ansible_user=
+
+[pulp-server]
+ansible_ssh_host= ansible_user=
+
+[app-dynamics]
+ansible_ssh_host= ansible_user=
+
+[smtp-gateway]
+ansible_ssh_host= ansible_user=
+
+[bacula-app]
+ansible_ssh_host= ansible_user=
+
+[bacula-db]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[openvpn-app]
+ansible_ssh_host= ansible_user=
+
+[haproxy-app]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user= 
+ansible_ssh_host= ansible_user=
+
+[reverse-proxy]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=

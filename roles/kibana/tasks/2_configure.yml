@@ -1,9 +1,26 @@
 ---
-- name: update elastic search url for kibana
-  lineinfile: "dest=/opt/kibana/config/kibana.yml regexp='^elasticsearch_url' insertafter='^# The Elasticsearch' line='elasticsearch_url: \"http://{{ansible_eth0.ipv4.address}}:9200\"'"
+
+- name: Update elastic search url for kibana
+  lineinfile:
+    dest: /opt/kibana/config/kibana.yml
+    regexp: '^elasticsearch_url'
+    insertafter: '^# The Elasticsearch'
+    line: 'elasticsearch_url: \"http://{{ elasticsearch_server_ip }}:9200\"'
   notify: restart kibana
 
 - name: start kibana
   service:
     name: kibana
+    state: started
+
+- name: Update nginx conf for kibana
+  templates:
+    src: kibana.conf.j2
+    dest: /etc/nginx/conf.d/kibana.conf
+    owner: root
+    group: root
+
+- name: start nginx
+  service:
+    name: nginx
     state: started

@@ -1,0 +1,22 @@
+---
+
+- name: Install Redis server
+  yum:
+    name: redis
+    state: present
+
+- name: configure Redis
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: 'bind 127.0.0.1'
+    line: '#bind 127.0.0.1'
+    insertafter: '#bind 127.0.0.1'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Ensure Redis is started on boot
+  service:
+    name: redis
+    enabled: yes
+    state: started

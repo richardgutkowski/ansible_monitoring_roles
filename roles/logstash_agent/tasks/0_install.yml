@@ -1,0 +1,41 @@
+---
+
+- name: Setup Logstash repo
+  yum_repository:
+    name: Logstash
+    description: Logstash repo
+    baseurl: "{{ logstash_yum_url }}"
+    gpgcheck: yes
+    gpgkey: "{{ logstash_yum_gpg }}"
+    enabled: yes
+
+- name: Installing logstash
+  yum:
+    name: logstash
+    state: installed
+    disable_gpg_check: "{{ logstash_gpg_check }}"
+
+- name: Enabling logstash on boot and start
+  service:
+    name: logstash
+    state: started
+    enabled: yes
+
+- name: Download log4j2 gem
+  get_url:
+    url: "{{ logstash_log4j2_gem_url }}"
+    dest: "/tmp/{{ logstash_log4j2_gem }}"
+    sha256sum: "{{ logstash_log4j2_gem_sha256sum }}"
+  #environment: proxy_env
+  when: logstash_log4j2_gem_url is defined
+  register: download_status
+
+- name: Check if log4j2 gem installed already
+  shell: /opt/logstash/bin/plugin list | grep -q logstash-input-log4j2
+  ignore_errors: True
+  register: install_status
+  when: logstash_log4j2_gem_url is defined
+
+- name: Install log4j2 gem support
+  command: "/opt/logstash/bin/plugin install /tmp/{{ logstash_log4j2_gem }}"
+  when: install_status.rc != 0 and logstash_log4j2_gem_url is defined

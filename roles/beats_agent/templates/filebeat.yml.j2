@@ -1,0 +1,50 @@
+################### Filebeat Configuration Example #########################
+
+############################# Filebeat ######################################
+filebeat:
+  # List of prospectors to fetch data.
+  prospectors:
+    # Each - is a prospector. Below are the prospector specific configurations
+    -
+      paths:
+       # - /var/log/*.log
+        - /var/log/secure
+        - /var/log/messages
+
+      input_type: {{ filebeat_prospect_input_type }}
+      document_type: {{ filebeat_prospect_doc_type}}
+
+  registry_file: {{ filebeat_prospect_registry_file }}
+
+############################# Output ##########################################
+output:
+
+  ### Logstash as output
+  logstash:
+    hosts: ["{{ logstash_server_ip }}:{{ logstash_server_port }}"]
+    bulk_max_size: {{ file_beat_bulk_max_size }}
+
+    # Optional TLS. By default is off.
+    tls:
+      certificate_authorities: ["{{ logstash_cert_path }}"]
+
+############################# Shipper #########################################
+
+shipper:
+
+############################# Logging #########################################
+
+# There are three options for the log ouput: syslog, file, stderr.
+logging:
+  level: warning
+  # enable file rotation with default configuration
+  to_files: true
+  # do not log to syslog
+  to_syslog: false
+
+  files:
+    path: {{ file_beat_log_path }}
+    name: {{ file_beat_log_name }}
+    keepfiles: {{ file_beat_keep_file }}
+    #files:
+    rotateeverybytes: 1048576000 # = 1000MB

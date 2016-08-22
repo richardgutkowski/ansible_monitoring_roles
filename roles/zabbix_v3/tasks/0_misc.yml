@@ -28,9 +28,6 @@
   command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
   notify: restart php-fpm
 
-- name: Turn off Apache
-  service: name=httpd state=stopped enabled=no
-
 - name: Create home directory
   file:
     state: directory

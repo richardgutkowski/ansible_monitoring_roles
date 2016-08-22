@@ -1,0 +1,14 @@
+# Elasticsearch default vars
+
+
+# Environment settings
+golden_image_used: false
+elasticsearch_cluster: false
+
+# General role settings
+elasticsearch_path_data_dir: /opt/data/elasticsearch/data
+elasticsearch_path_logs_dir: /opt/data/elasticsearch/logs
+elasticsearch_node_name: node-1
+elasticsearch_cluster_name: elk_azure_cluster
+elasticsearch_network_host: "{{ hostvars[groups['elasticsearch-server'][0]]['ansible_ssh_host'] }}"
+elasticsearch_http_port: 9200

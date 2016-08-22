@@ -1,0 +1,3 @@
+---
+
+beats_agent_checker: "chkconfig --list"

@@ -1,0 +1,18 @@
+filter{
+  if [type] == "tomcat" {
+    multiline {
+      patterns_dir => "/etc/logstash/conf.d/grok-patterns"
+      pattern => "^%{CATALINA_DATESTAMP}"
+      negate => "true"
+      what => "previous"
+    }
+    grok {
+      patterns_dir => "/etc/logstash/conf.d/grok-patterns"
+      match => { "message" => "%{CATALINA_DATESTAMP:timestamp} %{JAVACLASS:className} <?%{WORD:methodName}>?\n%{LOGLEVEL:logLevel}: %{GREEDYDATA:message}" }
+      overwrite => [ "message" ] 
+    }
+    date {
+      match => [ "timestamp", "MMM dd, YYYY HH:mm:ss a" ]
+    }
+  }
+}

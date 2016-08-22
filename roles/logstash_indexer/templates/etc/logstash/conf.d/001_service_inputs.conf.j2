@@ -1,0 +1,38 @@
+{% if logstash_service_file_inputs is defined %}
+{%   for item in logstash_service_file_inputs %}
+input {
+  file {
+    path => "{{ item.path }}"
+    type => "{{ item.type }}"
+    sincedb_path => "{{ logstash_log_dir }}/.{{ item.type }}sincedb"
+    add_field => { "project" => "{{ logstash_project }}" }
+  }
+}
+{%   endfor %}
+{% endif %}
+{% if logstash_service_inputs is defined %}
+{%   for item in logstash_service_inputs %}
+input {
+  {{ item.prot }} {
+{%     if item.host is defined %}
+    host => "{{ item.host }}"
+{%     endif %}
+{%     if item.mode is defined %}
+    mode => "{{ item.mode }}"
+{%     endif %}
+    port => "{{ item.port }}"
+    type => "{{ item.type }}"
+{%     if item.tags is defined %}
+    tags => "[{{ ansible_hostname }}-{{ item.prot }}]"
+{%     endif %}
+{%     if item.format is defined %}
+    format => "{{ item.format }}"
+{%     endif %}
+{%     if item.codec is defined %}
+    codec => "{{ item.codec }}"
+{%     endif %}
+    add_field => { "project" => "{{ logstash_project }}" }
+  }
+}
+{%   endfor %}
+{% endif %}

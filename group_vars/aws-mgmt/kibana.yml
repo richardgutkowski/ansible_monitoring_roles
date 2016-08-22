@@ -1,0 +1,1 @@
+elasticsearch_server_ip: "{{ hostvars[groups['elasticsearch-server'][0]]['ansible_ssh_host'] }}"

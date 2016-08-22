@@ -1,0 +1,5 @@
+---
+
+dashboards_url: https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+dashboards_dir: /opt/dashboards
+keep_zip_files: false

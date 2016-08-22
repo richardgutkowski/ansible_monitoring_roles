@@ -1,8 +1,9 @@
 
-- name: install zabbix agent
+- name: Install zabbix agent
   yum:
     name: zabbix-agent
     state: latest
+    disable_gpg_check: yes
 
 - name: Configure zabbix file
   template:
@@ -16,3 +17,11 @@
     name: zabbix-agent
     state: started
     enabled: yes
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: Ensure zabbix-agent is started and enabled on boot
+  service:
+    name: zabbix-agent.service
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

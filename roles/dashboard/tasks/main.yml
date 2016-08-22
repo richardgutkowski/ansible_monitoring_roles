@@ -1,0 +1,33 @@
+---
+
+  - name: Install dependenices
+    yum:
+      name: unzip
+      state: installed
+
+  - name: Get dashboards
+    get_url:
+      url: "{{ dashboards_url }}"
+      dest: "{{ dashboards_dir }}/beats-dashboards.zip"
+      mode: 0755
+
+  - name: Unzip dashboards
+    unarchive:
+      src: "{{ dashboards_dir }}/beats-dashboards.zip"
+      dest: "{{ dashboards_dir }}/beats-dashboards"
+      copy: no
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Upload dashboards to elasticsearch
+    shell: " ./load.sh http://{{ ansible_eth0.ipv4.address }}:9200"
+    args:
+      chdir: "{{ dashboards_dir }}/beats-dashboards"
+      executable: /bin/bash
+
+  - name: Remove zip files
+    file:
+      path: "{{ dashboards_dir }}/beats-dashboards.zip"
+      state: absent
+    when: ( keep_zip_files is false )

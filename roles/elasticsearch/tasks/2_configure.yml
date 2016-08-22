@@ -1,4 +1,5 @@
 ---
+
 - name: Create logstash dirs under /opt
   file:
     path: "/opt/{{ item.path }}"
@@ -54,12 +55,22 @@
 - name: Backup original elastic search config file
   command: cp -v /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.backup creates=/etc/elasticsearch/elasticsearch.yml.backup
 
-- name: Update clustername to elk_{{local_subdomain}}_cluster
-  lineinfile: "dest=/etc/elasticsearch/elasticsearch.yml regexp='^cluster.name' insertafter='^#cluster.name' line='cluster.name: elk_{{local_subdomain}}_cluster'"
+- name: Update clustername in elasticsearch settings
+  lineinfile:
+    dest: /etc/elasticsearch/elasticsearch.yml
+    regexp: "^cluster.name"
+    insertafter: "^#cluster.name"
+    line: "cluster.name: {{ elk_cluster_name }}"
   notify: restart elasticsearch
+  when: ( elasticsearch_cluster|bool )
 
-- name: update network host for elasticsearch
-  lineinfile: "dest=/etc/elasticsearch/elasticsearch.yml regexp='^network.host' insertafter='^#network.host' line='network.host: {{ansible_eth0.ipv4.address}}'"
+- name: Update network host for elasticsearch
+  lineinfile:
+    dest: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^network.host'
+    insertafter: '^#network.host'
+    line: "network.host: {{ ansible_eth0.ipv4.address }}"
+  notify: restart elasticsearch
 
 - name: Start elasticsearch
   service:

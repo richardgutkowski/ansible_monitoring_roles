@@ -2,5 +2,13 @@
 # tasks file for zabbix_v3_lts
 
 - include: 0_misc.yml
+  when: ( zabbix_master|bool )
+
 - include: 1_nginx_config.yml
+  when: ( zabbix_master|bool )
+
 - include: 2_php_config.yml
+  when: ( zabbix_master|bool )
+
+- include: 3_proxy.yml
+  when: ( zabbix_proxy|bool )

@@ -1,0 +1,36 @@
+---
+
+- name: Setup Zabbix repo
+  yum_repository:
+    name: Zabbix
+    description: Zabbix repository
+    baseurl: "{{ zabbix_repo_url }}"
+    enabled: "{{ zabbix_repo_enable }}"
+    gpgcheck: "{{ zabbix_repo_gpgcheck }}"
+    gpgkey: "{{zabbix_repo_gpg_url }}"
+
+- name: Install Zabbix proxy
+  yum:
+    name: zabbix-proxy-pgsql
+    state: installed
+
+- name: Update zabbix proxy conf
+  template:
+    src: zabbix_proxy.conf.j2
+    dest: /etc/zabbix/zabbix_proxy.conf
+    owner: root
+    group: zabbix
+    mode: 0644
+
+- name: Enabled and start Zabbix proxy
+  service:
+    name: zabbix-proxy
+    state: started
+    enabled: yes
+
+- name: Disable nginx
+  service:
+    name: nginx
+    state: stopped
+    enabled: no
+  when: ( use_nginx_proxy|bool )

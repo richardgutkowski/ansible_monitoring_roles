@@ -1,0 +1,59 @@
+---
+
+- name: Setup beats repo
+  yum_repository:
+    name: Beats
+    description: Elastic Beats repo
+    baseurl: "{{ beats_yum_url }}"
+    gpgcheck: "{{ beats_yum_check }}"
+    gpgkey: "{{ beats_yum_gpg }}"
+    enabled: yes
+
+- name: Install beats agents
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - "{{ beats_yum_pkg_to_install }}"
+
+- name: Check if filebeat exists
+  raw: "if {{ beats_agent_checker }} | grep -q filebeat;   then echo true;   else echo false; fi;"
+  args:
+    executable: /bin/bash
+  register: filebeat_exists
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Enable filebeats agents
+  service:
+    name: filebeat
+    state: started
+    enabled: yes
+  when: filebeat_exists
+
+- name: Check if topbeat exists
+  raw: "if {{ beats_agent_checker }} | grep -q topbeat;   then echo true;   else echo false; fi;"
+  register: topbeat_exists
+  args:
+    executable: /bin/bash
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Enable filebeats agents
+  service:
+    name: topbeat
+    state: started
+    enabled: yes
+  when: topbeat_exists
+
+- name: Check if packetbeat exists
+  raw: "if {{ beats_agent_checker }} | grep -q packetbeat;   then echo true;   else echo false; fi;"
+  register: packetbeat_exists
+  args:
+    executable: /bin/bash
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Enable packetbeat agents
+  service:
+    name: packetbeat
+    state: started
+    enabled: yes
+  when: packetbeat_exists

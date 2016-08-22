@@ -2,3 +2,12 @@
   yum:
     name: libselinux-python
     state: latest
+
+- name: Setup Zabbix repo
+  yum_repository:
+    name: Zabbix
+    description: Zabbix repository
+    baseurl: "{{ zabbix_repo_url }}"
+    enabled: "{{ zabbix_repo_enable }}"
+    gpgcheck: "{{ zabbix_repo_gpgcheck }}"
+    gpgkey: "{{zabbix_repo_gpg_url }}"

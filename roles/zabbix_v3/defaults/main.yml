@@ -4,7 +4,7 @@
 zabbix_repo_url: "http://repo.zabbix.com/zabbix/3.0/rhel/7/$basearch/"
 zabbix_repo_enable: yes
 zabbix_repo_gpgcheck: 1
-zabbix_repo_gpg_url: ""
+zabbix_repo_gpg_url: "http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX"
 zabbix_yum_packages:
     - libselinux-python
     - zabbix-server-pgsql

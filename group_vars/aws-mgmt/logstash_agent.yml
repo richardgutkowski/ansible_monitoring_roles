@@ -1,0 +1,61 @@
+---
+# file: group_vars/all
+
+#proxy_env:
+#  http_proxy: http://IP:PORT
+#  https_proxy: http://IP:PORT
+
+golden_image_used: false
+
+# Server details
+logstash_server_ip: "{{ hostvars[groups['logstash-server'][0]]['ansible_ssh_host'] }}"
+
+### LOGSTASH HOST CONFIGS ###
+clear_logstash_config: false  #defines if logstash_config_dir should be cleared out
+logstash_config_dir: /etc/logstash/conf.d
+logstash_folder: /opt/logstash
+logstash_base_outputs:
+  - output: redis
+    output_host: '{{ logstash_server_ip }}'
+logstash_project: steel_thread
+logstash_log_dir: /var/log/logstash
+logstash_version: 1.5
+logstash_enabled: true
+logstash_base_configs:
+  - 000_system_inputs
+  - 101_messages
+  - 102_secure
+  - 103_zabbix_agent
+  - 104_clamd
+  - 105_maillog
+  - 106_freshclam
+  - 107_clamscan_daily
+  - 108_cron
+  - 999_outputs
+logstash_system_file_inputs:
+  - path: /var/log/messages
+    type: messages
+  - path: /var/log/secure
+    type: secure
+  - path: /var/log/clamav/clamd.log
+    type: clamd
+  - path: /var/log/clamav/freshclam.log
+    type: freshclam
+  - path: /var/log/clamscan_daily.log
+    type: calmdaily
+  - path: /var/log/cron
+    type: cron
+  - path: /var/log/maillog
+    type: maillog
+  - path: /var/log/zabbix/zabbix_agent.log
+    type: zabbix-agent
+  - path: /var/log/zabbix/zabbix_server.log
+    type: zabbix-server
+logstash_basic_patterns_configs:
+  - postfix
+  - clamd
+  - clamscan_daily
+
+logstash_yum_url: "http://packages.elasticsearch.org/logstash/2.2/centos"
+logstash_yum_gpg: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+logstash_gpg_check: yes

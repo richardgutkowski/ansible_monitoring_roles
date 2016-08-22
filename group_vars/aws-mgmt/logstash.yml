@@ -1,0 +1,18 @@
+---
+
+# Yum settings
+logstash_yum_url: "http://packages.elasticsearch.org/logstash/2.2/centos"
+logstash_yum_gpg: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+logstash_gpg_check: yes
+
+# Server specific
+logstash_server_ip: "{{ hostvars[groups['logstash-server'][0]]['ansible_ssh_host'] }}"
+logstash_domain_name: infra.mgmt.hmcts.internal
+
+# Elasticsearch settings
+elasticsearch_server_ip: "{{ hostvars[groups['elasticsearch-server'][0]]['ansible_ssh_host'] }}"
+elasticsearch_server_port: 9200
+
+# Certificate settings
+logstash_cert_required: no
+logstash_ip_cert_required: no

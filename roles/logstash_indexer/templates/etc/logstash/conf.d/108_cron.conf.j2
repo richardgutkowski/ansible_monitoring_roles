@@ -1,0 +1,9 @@
+filter {
+  if [type] == "cron" {
+    grok {
+     #match => { "message" => "%{SYSLOGBASE} %{GREEDYDATA:cron_message}" }
+     match => { "message" => "%{SYSLOGTIMESTAMP:time} %{SYSLOGHOST:logsource} %{DATA:program}(?:\[%{POSINT:pid}\])?: %{GREEDYDATA:cron_message}" }
+    }
+    date { match => [ "time", "MMM dd HH:mm:ss", "MMM  d HH:mm:ss" ] }
+  }
+}

@@ -1,0 +1,62 @@
+# Global variables for Beats Agents
+
+logstash_server_ip: "{{ hostvars[groups['logstash-server'][0]]['ansible_ssh_host'] }}"
+logstash_server_port: 5044
+
+# Yum repository settings
+beats_yum_url: "https://packages.elastic.co/beats/yum/el/$basearch"
+beats_yum_gpg: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+beats_yum_check: yes
+beats_yum_pkg_to_install:
+  - filebeat
+  - topbeat
+  - packetbeat
+
+# filebeat specific settings
+filebeat_prospect_input_type: log
+filebeat_prospect_doc_type: syslog
+filebeat_prospect_registry_file: /var/lib/filebeat/registry
+file_beat_bulk_max_size: 1024
+file_beat_log_path: /var/log/mybeat
+file_beat_log_name: filebeat.log
+file_beat_keep_file: 7
+
+# topbeat specific settings
+topbeat_config_dir: /etc/topbeat
+top_beat_bulk_max_size: 1024
+top_beat_log_path: /var/log/mybeat
+top_beat_log_name: topbeat.log
+top_beat_keep_file: 7
+
+# packetbeat specific settings
+packetbeat_config_dir: /etc/packetbeat
+packet_beat_bulk_max_size: 1024
+packet_beat_log_path: /var/log/mybeat
+packet_beat_log_name: packetbeat.log
+packet_beat_keep_file: 7
+
+# Certificate settings
+upload_logstash_certificate: yes
+logstash_cert_path: /etc/pki/tls/certs/logstash-forwarder.crt
+logstash_pub_cert: |
+  -----BEGIN CERTIFICATE-----
+  MIIDaDCCAlCgAwIBAgIJAMCNfXdalE9FMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
+  BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
+  Q29tcGFueSBMdGQwHhcNMTYwNzA4MTQyMzMzWhcNMjYwNzA2MTQyMzMzWjBCMQsw
+  CQYDVQQGEwJYWDEVMBMGA1UEBwwMRGVmYXVsdCBDaXR5MRwwGgYDVQQKDBNEZWZh
+  dWx0IENvbXBhbnkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+  utVePzL+7xpsk5pyZ0U9OMEScDGTnr1w+a572iFDiigYil1Wv5gutmk7aI3/a0Wj
+  HoIjn/Y1sZJZJs6R6AnaVPwc0RgBHRt0UHu0YL+/soeUBSaJd3Teg51ujVSbfonl
+  p2DHkU1qNcxHGTIK8wl8gFNrSxREh11Egjt2oT7/NAvauGHQuxaPTccYAHf9LDLu
+  NuiSDOKROQFjN8W3MRRXDzJslNQR0uBhXeF44dTXsC9mOKNuJtZSsemRRy+ZazmJ
+  ALCffUedogCp6R1OgyOUV74H/Fhej8VpblOrRuo0w+lIWb8IcxHewIfnZYqBGKF5
+  8cYN+E1wCAMUrLpRdaikcQIDAQABo2EwXzAPBgNVHREECDAGhwQKgAFGMB0GA1Ud
+  DgQWBBRvfcWGhtTlHSDDBT1arPR4EBH77TAfBgNVHSMEGDAWgBRvfcWGhtTlHSDD
+  BT1arPR4EBH77TAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQC1Yk71
+  uVeqyyReE13PzAasMo1oH0+tFSvZqouw4+x34nUtGdfY+Nzyvh7WKtZx1unTRTNc
+  5CXGkVS+kx7JGiTJSBhrzHuwD6Dl0C8YKLZCCu9JlO7BKYJia6uwKYZyjM9gQezZ
+  evx6Gdo0Z3E9XkbOrPnVACX3SBXGdmqKn0ksoPvhRaqBB8Y8xIFnP67ihaIpNfED
+  enc/+nAS6eSutucxHGBRxFvOPMc+yJehxUpKpslt4aiqZKWPlZtIrHxYaHmVqklP
+  jHq7QPdtNz8rxk7gciRtb2lqR8WMpYD7xQobgwK+UCfanCtnn2xj/fCXTvjR82ko
+  VN7PwU0R/Y4RYiGQ
+  -----END CERTIFICATE-----

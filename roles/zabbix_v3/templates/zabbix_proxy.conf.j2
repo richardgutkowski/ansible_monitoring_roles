@@ -1,0 +1,118 @@
+# This is a configuration file for Zabbix proxy daemon
+# To get more information about Zabbix, visit http://www.zabbix.com
+
+############ GENERAL PARAMETERS #################
+#       0 - proxy in the active mode
+#       1 - proxy in the passive mode
+ProxyMode=1
+
+Server={{ zabbix_server_host }}
+
+ServerPort={{ zabbix_server_port }}
+
+#       Unique, case sensitive Proxy name. Make sure the Proxy name is known to the server!
+#       Value is acquired from HostnameItem if undefined.
+Hostname={{ zabbix_proxy_name }}
+#       Item used for generating Hostname if it is undefined.
+#       Ignored if Hostname is defined.
+# HostnameItem=system.hostname
+
+ListenPort={{ zabbix_server_port }}
+
+SourceIP={{ ansible_eth0.ipv4.address }}
+
+#       Specifies where log messages are written to:
+#               system  - syslog
+#               file    - file specified with LogFile parameter
+#               console - standard output
+# LogType=file
+
+LogFile=/var/log/zabbix/zabbix_proxy.log
+
+#       Maximum size of log file in MB.
+#       0 - disable automatic log rotation.
+#
+# Range: 0-1024
+# Default:
+# LogFileSize=1
+LogFileSize=512
+
+### Option: DebugLevel
+#       Specifies debug level:
+#       0 - basic information about starting and stopping of Zabbix processes
+#       1 - critical information
+#       2 - error information
+#       3 - warnings
+#       4 - for debugging (produces lots of information)
+#       5 - extended debugging (produces even more information)
+#
+# Range: 0-5
+DebugLevel=3
+
+PidFile=/var/run/zabbix/zabbix_proxy.pid
+
+DBHost={{ database.host }}
+
+DBName={{ database.name }}
+
+DBUser={{ database.user }}
+
+DBPassword={{ database.password }}
+
+DBPort={{ database.port }}
+
+######### PROXY SPECIFIC PARAMETERS #############
+
+### Option: ProxyLocalBuffer
+#       Proxy will keep data locally for N hours, even if the data have already been synced with the server.
+#       This parameter may be used if local data will be used by third party applications.
+#
+# Mandatory: no
+# Range: 0-720
+# Default:
+ProxyLocalBuffer={{ zabbix_proxy_local_buffer }}
+
+### Option: ProxyOfflineBuffer
+#       Proxy will keep data for N hours in case if no connectivity with Zabbix Server.
+#       Older data will be lost.
+#
+# Mandatory: no
+# Range: 1-720
+# Default:
+ProxyOfflineBuffer={{ zabbix_proxy_offline_buffer }}
+
+### Option: HeartbeatFrequency
+#       Frequency of heartbeat messages in seconds.
+#       Used for monitoring availability of Proxy on server side.
+#       0 - heartbeat messages disabled.
+#       For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 0-3600
+# Default:
+HeartbeatFrequency={{ zabbix_proxy_heartbeat }}
+
+### Option: ConfigFrequency
+#       How often proxy retrieves configuration data from Zabbix Server in seconds.
+#       For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 1-3600*24*7
+# Default:
+ConfigFrequency={{ zabbix_proxy_config_frequency }}
+
+### Option: DataSenderFrequency
+#       Proxy will send collected data to the Server every N seconds.
+#       For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 1-3600
+# Default:
+DataSenderFrequency={{ zabbix_proxy_sender_frequency }}
+
+############ ADVANCED PARAMETERS ################
+
+SNMPTrapperFile=/var/log/snmptrap/snmptrap.log
+Timeout=4
+ExternalScripts=/usr/lib/zabbix/externalscripts
+LogSlowQueries=3000

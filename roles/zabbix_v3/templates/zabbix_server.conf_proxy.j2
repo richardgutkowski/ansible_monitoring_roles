@@ -1,0 +1,134 @@
+# This is a configuration file for Zabbix Server process
+# To get more information about Zabbix,
+# visit http://www.zabbix.com
+
+############ GENERAL PARAMETERS #################
+
+### Option: ListenPort
+#       Listen port for trapper.
+#
+# Mandatory: no
+# Range: 1024-32767
+# Default:
+# ListenPort=10051
+
+### Option: SourceIP
+#       Source IP address for outgoing connections.
+#
+# Mandatory: no
+# Default:
+# SourceIP=
+
+### Option: LogFile
+#       Name of log file.
+#       If not set, syslog is used.
+#
+# Mandatory: no
+# Default:
+# LogFile=
+
+LogFile=/var/log/zabbix/zabbix_server.log
+
+### Option: LogFileSize
+#       Maximum size of log file in MB.
+#       0 - disable automatic log rotation.
+#
+# Mandatory: no
+# Range: 0-1024
+# Default:
+# LogFileSize=1
+
+LogFileSize=0
+
+### Option: DebugLevel
+#       Specifies debug level
+#       0 - basic information about starting and stopping of Zabbix processes
+#       1 - critical information
+#       2 - error information
+#       3 - warnings
+#       4 - for debugging (produces lots of information)
+#
+# Mandatory: no
+# Range: 0-4
+# Default:
+# DebugLevel=3
+
+### Option: PidFile
+#       Name of PID file.
+#
+# Mandatory: no
+# Default:
+# PidFile=/tmp/zabbix_server.pid
+
+PidFile=/var/run/zabbix/zabbix_server.pid
+
+### Option: DBHost
+#       Database host name.
+#       If set to localhost, socket is used for MySQL.
+#       If set to empty string, socket is used for PostgreSQL.
+#
+# Mandatory: no
+# Default:
+# DBHost=localhost
+
+DBHost={{ database.host }}
+
+### Option: DBName
+#       Database name.
+#       For SQLite3 path to database file must be provided. DBUser and DBPassword are ignored.
+#
+# Mandatory: yes
+# Default:
+# DBName=
+
+DBName={{ database.name }}
+
+### Option: DBSchema
+#       Schema name. Used for IBM DB2 and PostgreSQL.
+#
+# Mandatory: no
+# Default:
+# DBSchema=
+
+### Option: DBUser
+#       Database user. Ignored for SQLite.
+#
+# Mandatory: no
+# Default:
+# DBUser=
+
+DBUser={{ database.user }}
+
+### Option: DBPassword
+#       Database password. Ignored for SQLite.
+#       Comment this line if no password is used.
+#
+# Mandatory: no
+# Default:
+# DBPassword=
+
+DBPassword={{ database.password }}
+
+
+### Option: DBSocket
+#       Path to MySQL socket.
+#
+# Mandatory: no
+# Default:
+# DBSocket=/tmp/mysql.sock
+
+DBSocket=/var/lib/mysql/mysql.sock
+
+### Option: DBPort
+#       Database port when not using local socket. Ignored for SQLite.
+#
+# Mandatory: no
+# Range: 1024-65535
+# Default (for MySQL):
+# DBPort=3306
+############ ADVANCED PARAMETERS ################
+
+AlertScriptsPath=/usr/lib/zabbix/alertscripts
+
+# Proxy settings:
+ProxyMode: 1
