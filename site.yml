@@ -1,5 +1,6 @@
 ---
 
+# Deploy Zabbix agents
 - hosts: all
   gather_facts: true
   become: yes
@@ -7,6 +8,7 @@
     - { role: zabbix-agents, tags ["zabbix-agents"] }
   tags: zabbix-agents
 
+# Deploy Beats/Logstash agents
 - hosts: all
   gather_facts: true
   become: yes
@@ -15,6 +17,7 @@
     - { role: beats-agent, tags ["beats-agent"] }
   tags: logstash-agents
 
+# Zabbix database
 - hosts: zabbix-db
   gather_facts: true
   become: yes
@@ -22,6 +25,7 @@
     - { role: postgres, tags: ["postgres"] }
   tags: database
 
+# Zabbix application
 - hosts: zabbix-app
   gather_facts: true
   become: yes
@@ -30,5 +34,6 @@
     - { role: zabbix_v3, tags: ["zabbix"] }
   tags: zabbix
 
+
 # REMEMBER TO RUN AS FOLLOWING
-# ansible-playbook -i inventory/azure site.yml -u user --ask-become-pass -k
+# ansible-playbook -i inventory/mgmt-layer site.yml -u user --ask-become-pass -k

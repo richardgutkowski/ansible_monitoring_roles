@@ -1,11 +1,9 @@
-# Monitoring_stack_aws
-New Monitoring stack for deployment in AWS
+# Monitoring ansible roles
+Ansible monitoring roels that are deployment ready.
 
 This stack includes the following tools:
 * E.L.K stack
 * Zabbix
-* Icinga (OMD distro) - still to be added
-* Icinga 2 - still to be added
-* Sentry - still to be added
-* JavaMelody - still to be added
+* Sentry - deprecated
+* Icinga (OMD) - deprecated
 * Grafana - still to be added

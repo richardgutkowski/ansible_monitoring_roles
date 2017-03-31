@@ -1,0 +1,38 @@
+[monitoring-stack:children]
+elk-servers
+# zabbix-servers - uncomment if used
+# icinga-servers - uncomment if used
+
+[elk-servers:children]
+elasticsearch-server
+logstash-server
+kibana-server
+
+[zabbix-servers:children]
+zabbix-db
+zabbix-app
+
+[icinga-servers:children]
+icinga-db
+icinga-app
+
+[zabbix-db]
+ansible_ssh_host= ansible_user=
+
+[zabbix-app]
+ansible_ssh_host= ansible_user=
+
+[logstash-server]
+ansible_ssh_host= ansible_user=
+
+[elasticsearch-server]
+ansible_ssh_host= ansible_user=
+
+[haproxy-app]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
+
+[reverse-proxy]
+ansible_ssh_host= ansible_user=
+ansible_ssh_host= ansible_user=
