@@ -51,7 +51,7 @@
 
 - name: Generate csr for logstash
   command: >
-  /usr/bin/openssl req -new -key /etc/logstash/logstash-server.key -out /etc/logstash/logstash-server.csr -subj "/C=GB/ST=London/L=London/O=Ministry of Justice/OU=CJSCP - Criminal Justice Programme/CN={{ logstash_domain_name }}/emailAddress=CJSCPHASS@hmcts.gsi.gov.uk" creates=/etc/logstash/logstash-server.csr
+  /usr/bin/openssl req -new -key /etc/logstash/logstash-server.key -out /etc/logstash/logstash-server.csr -subj "/C=GB/ST=London/L=London/O=Ministry of foobar/OU=CJSCP -  foobar /CN={{ logstash_domain_name }}/emailAddress=CJSCPHASS@hmcts.gsi.gov.uk" creates=/etc/logstash/logstash-server.csr
   when: ( logstash_cert_required|bool )
 
 - name: Generate logstash certificate from csr
